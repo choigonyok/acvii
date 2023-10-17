@@ -1,3 +1,3 @@
 #!/bin/bash
 
-echo "HEE"
+docker build 
