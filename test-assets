@@ -1,0 +1,49 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  labels:
+    app: frontend
+  name: dep-frontend
+spec:
+  replicas: 2
+  selector:
+    matchLabels:
+      app: frontend
+  template:
+    metadata:
+      labels:
+        app: frontend
+    spec:
+      serviceAccount: sa-frontend
+      automountServiceAccountToken: false
+      # if it is true, token is in /var/run/secrets/kubernetes.io/serviceaccount path
+      containers:
+      - name: frontend
+        image: frontend:tgd
+        # image: achoistic98/tgd-frontend:latest
+        # imagePullPolicy: Always
+        securityContext:
+          allowPrivilegeEscalation: false
+          capabilities:
+            drop:
+              - all
+        ports:
+        - containerPort: 3000
+        volumeMounts:
+        - mountPath: /app/src
+          name: pvc-frontend
+      volumes:
+        - name: pvc-frontend
+          persistentVolumeClaim:
+            claimName: pvc-frontend
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: svc-frontend
+spec:
+  selector:
+    app: frontend
+  type: ClusterIP
+  ports:
+    - port: 3000
