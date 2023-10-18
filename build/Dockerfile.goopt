@@ -1,3 +1,18 @@
+FROM --platform=linux/amd64 node:16-alpine AS build
+
+WORKDIR /frontend
+
+ADD ./frontend/package.json .
+ADD ./frontend/package-lock.json .
+
+RUN npm install
+
+COPY ./frontend .
+
+ENV WDS_SOCKET_PORT=0
+
+RUN npm run build
+
 FROM ubuntu:22.04
 
 WORKDIR /usr/local
@@ -10,14 +25,14 @@ RUN curl -O -L "https://go.dev/dl/go1.21.1.linux-amd64.tar.gz"
 
 RUN tar -C /usr/local -xzf go1.21.1.linux-amd64.tar.gz
 
-WORKDIR /app
+WORKDIR /goopt
 
 ENV PATH=$PATH:/usr/local/go/bin
 ENV GOPATH /usr/local/go
 ENV GOMAXPROCS=2
 
 RUN chown golang:golang /usr/local/go -R
-RUN chown golang:golang /app -R
+RUN chown golang:golang /goopt -R
 
 COPY ./go.mod ./
 COPY ./go.sum ./
@@ -27,6 +42,7 @@ RUN ["/bin/bash", "-c", "go mod download"]
 RUN ["/bin/bash", "-c", "go install -mod=mod github.com/githubnemo/CompileDaemon"]
 
 COPY . .
+COPY --from=build /frontend/build /goopt/assets
 
 USER golang
 

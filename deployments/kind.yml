@@ -8,5 +8,11 @@ nodes:
     listenAddress: "127.0.0.1"
     protocol: TCP
   extraMounts:
-    - hostPath: ./
-      containerPath: /goopt
+    - hostPath: ./cmd
+      containerPath: /goopt/cmd
+    - hostPath: ./pkg
+      containerPath: /goopt/pkg
+    - hostPath: ./internal
+      containerPath: /goopt/internal
+    - hostPath: ./test
+      containerPath: /goopt/test

@@ -1,8 +1,14 @@
+apiVersion: v1
+kind: ServiceAccount
+metadata:
+  name: goopt
+# + ClusterRole
+# + ClusterRoleBinding
 ---
 apiVersion: v1
 kind: PersistentVolume
 metadata:
-  name: goopt
+  name: goopt-test
   labels:
     type: local
 spec:
@@ -12,12 +18,57 @@ spec:
   accessModes:
     - ReadWriteOnce
   hostPath:
-    path: /goopt
+    path: /goopt/test
+---
+apiVersion: v1
+kind: PersistentVolume
+metadata:
+  name: goopt-cmd
+  labels:
+    type: local
+spec:
+  storageClassName: ""
+  capacity:
+    storage: 11Gi
+  accessModes:
+    - ReadWriteOnce
+  hostPath:
+    path: /goopt/cmd
+---
+apiVersion: v1
+kind: PersistentVolume
+metadata:
+  name: goopt-pkg
+  labels:
+    type: local
+spec:
+  storageClassName: ""
+  capacity:
+    storage: 11Gi
+  accessModes:
+    - ReadWriteOnce
+  hostPath:
+    path: /goopt/pkg
+---
+apiVersion: v1
+kind: PersistentVolume
+metadata:
+  name: goopt-internal
+  labels:
+    type: local
+spec:
+  storageClassName: ""
+  capacity:
+    storage: 11Gi
+  accessModes:
+    - ReadWriteOnce
+  hostPath:
+    path: /goopt/internal
 ---
 apiVersion: v1
 kind: PersistentVolumeClaim
 metadata:
-  name: goopt
+  name: goopt-test
   namespace: default
 spec:
   resources:
@@ -26,7 +77,49 @@ spec:
   accessModes:
     - ReadWriteOnce
   storageClassName: ""
-  volumeName: goopt
+  volumeName: goopt-test
+---
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  name: goopt-pkg
+  namespace: default
+spec:
+  resources:
+    requests:
+      storage: 11Gi
+  accessModes:
+    - ReadWriteOnce
+  storageClassName: ""
+  volumeName: goopt-pkg
+---
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  name: goopt-internal
+  namespace: default
+spec:
+  resources:
+    requests:
+      storage: 11Gi
+  accessModes:
+    - ReadWriteOnce
+  storageClassName: ""
+  volumeName: goopt-internal
+---
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  name: goopt-cmd
+  namespace: default
+spec:
+  resources:
+    requests:
+      storage: 11Gi
+  accessModes:
+    - ReadWriteOnce
+  storageClassName: ""
+  volumeName: goopt-cmd
 ---
 apiVersion: apps/v1
 kind: Deployment
@@ -58,12 +151,28 @@ spec:
           ports:
             - containerPort: 8080
           volumeMounts:
-            - mountPath: /app
-              name: goopt
+            - mountPath: /goopt/test
+              name: goopt-test
+            - mountPath: /goopt/pkg
+              name: goopt-pkg
+            - mountPath: /goopt/internal
+              name: goopt-internal
+            - mountPath: /goopt/cmd
+              name: goopt-cmd
       volumes:
-        - name: goopt
+        - name: goopt-test
           persistentVolumeClaim:
-            claimName: goopt
+            claimName: goopt-test
+        - name: goopt-pkg
+          persistentVolumeClaim:
+            claimName: goopt-pkg
+        - name: goopt-internal
+          persistentVolumeClaim:
+            claimName: goopt-internal
+        - name: goopt-cmd
+          persistentVolumeClaim:
+            claimName: goopt-cmd
+
 ---
 apiVersion: v1
 kind: Service
@@ -77,9 +186,3 @@ spec:
     - port: 8080
       nodePort: 32100
 ---
-apiVersion: v1
-kind: ServiceAccount
-metadata:
-  name: goopt
-# + ClusterRole
-# + ClusterRoleBinding
