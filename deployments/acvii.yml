@@ -1,14 +1,14 @@
 apiVersion: v1
 kind: ServiceAccount
 metadata:
-  name: goopt
+  name: acvii
 # + ClusterRole
 # + ClusterRoleBinding
 ---
 apiVersion: v1
 kind: PersistentVolume
 metadata:
-  name: goopt-test
+  name: acvii-test
   labels:
     type: local
 spec:
@@ -18,12 +18,12 @@ spec:
   accessModes:
     - ReadWriteOnce
   hostPath:
-    path: /goopt/test
+    path: /acvii/test
 ---
 apiVersion: v1
 kind: PersistentVolume
 metadata:
-  name: goopt-cmd
+  name: acvii-cmd
   labels:
     type: local
 spec:
@@ -33,12 +33,12 @@ spec:
   accessModes:
     - ReadWriteOnce
   hostPath:
-    path: /goopt/cmd
+    path: /acvii/cmd
 ---
 apiVersion: v1
 kind: PersistentVolume
 metadata:
-  name: goopt-pkg
+  name: acvii-pkg
   labels:
     type: local
 spec:
@@ -48,12 +48,12 @@ spec:
   accessModes:
     - ReadWriteOnce
   hostPath:
-    path: /goopt/pkg
+    path: /acvii/pkg
 ---
 apiVersion: v1
 kind: PersistentVolume
 metadata:
-  name: goopt-internal
+  name: acvii-internal
   labels:
     type: local
 spec:
@@ -63,12 +63,12 @@ spec:
   accessModes:
     - ReadWriteOnce
   hostPath:
-    path: /goopt/internal
+    path: /acvii/internal
 ---
 apiVersion: v1
 kind: PersistentVolumeClaim
 metadata:
-  name: goopt-test
+  name: acvii-test
   namespace: default
 spec:
   resources:
@@ -77,12 +77,12 @@ spec:
   accessModes:
     - ReadWriteOnce
   storageClassName: ""
-  volumeName: goopt-test
+  volumeName: acvii-test
 ---
 apiVersion: v1
 kind: PersistentVolumeClaim
 metadata:
-  name: goopt-pkg
+  name: acvii-pkg
   namespace: default
 spec:
   resources:
@@ -91,12 +91,12 @@ spec:
   accessModes:
     - ReadWriteOnce
   storageClassName: ""
-  volumeName: goopt-pkg
+  volumeName: acvii-pkg
 ---
 apiVersion: v1
 kind: PersistentVolumeClaim
 metadata:
-  name: goopt-internal
+  name: acvii-internal
   namespace: default
 spec:
   resources:
@@ -105,12 +105,12 @@ spec:
   accessModes:
     - ReadWriteOnce
   storageClassName: ""
-  volumeName: goopt-internal
+  volumeName: acvii-internal
 ---
 apiVersion: v1
 kind: PersistentVolumeClaim
 metadata:
-  name: goopt-cmd
+  name: acvii-cmd
   namespace: default
 spec:
   resources:
@@ -119,68 +119,68 @@ spec:
   accessModes:
     - ReadWriteOnce
   storageClassName: ""
-  volumeName: goopt-cmd
+  volumeName: acvii-cmd
 ---
 apiVersion: apps/v1
 kind: Deployment
 metadata:
   labels:
-    app.kubernetes.io/name: goopt
-    app.kubernetes.io/component: goopt
+    app.kubernetes.io/name: acvii
+    app.kubernetes.io/component: acvii
     app.kubernetes.io/version: "1.0"
-    statefulset.kubernetes.io/pod-name: goopt
-  name: goopt
+    statefulset.kubernetes.io/pod-name: acvii
+  name: acvii
 spec:
   replicas: 1
   selector:
     matchLabels:
-      app.kubernetes.io/name: goopt
+      app.kubernetes.io/name: acvii
   template:
     metadata:
       labels:
-        app.kubernetes.io/name: goopt
-        app.kubernetes.io/component: goopt
+        app.kubernetes.io/name: acvii
+        app.kubernetes.io/component: acvii
         app.kubernetes.io/version: "1.0"
-        statefulset.kubernetes.io/pod-name: goopt
+        statefulset.kubernetes.io/pod-name: acvii
     spec:
-      serviceAccount: goopt
+      serviceAccount: acvii
       automountServiceAccountToken: true
       containers:
-        - name: goopt
-          image: achoistic98/goopt:v0.0.1
+        - name: acvii
+          image: achoistic98/acvii:v0.0.1
           ports:
             - containerPort: 8080
           volumeMounts:
-            - mountPath: /goopt/test
-              name: goopt-test
-            - mountPath: /goopt/pkg
-              name: goopt-pkg
-            - mountPath: /goopt/internal
-              name: goopt-internal
-            - mountPath: /goopt/cmd
-              name: goopt-cmd
+            - mountPath: /acvii/test
+              name: acvii-test
+            - mountPath: /acvii/pkg
+              name: acvii-pkg
+            - mountPath: /acvii/internal
+              name: acvii-internal
+            - mountPath: /acvii/cmd
+              name: acvii-cmd
       volumes:
-        - name: goopt-test
+        - name: acvii-test
           persistentVolumeClaim:
-            claimName: goopt-test
-        - name: goopt-pkg
+            claimName: acvii-test
+        - name: acvii-pkg
           persistentVolumeClaim:
-            claimName: goopt-pkg
-        - name: goopt-internal
+            claimName: acvii-pkg
+        - name: acvii-internal
           persistentVolumeClaim:
-            claimName: goopt-internal
-        - name: goopt-cmd
+            claimName: acvii-internal
+        - name: acvii-cmd
           persistentVolumeClaim:
-            claimName: goopt-cmd
+            claimName: acvii-cmd
 
 ---
 apiVersion: v1
 kind: Service
 metadata:
-  name: goopt
+  name: acvii
 spec:
   selector:
-    app.kubernetes.io/name: goopt
+    app.kubernetes.io/name: acvii
   type: NodePort
   ports:
     - port: 8080

@@ -17,7 +17,7 @@ FROM ubuntu:22.04
 
 WORKDIR /usr/local
 
-RUN useradd -ms /bin/bash golang
+RUN useradd -ms /bin/bash acvii
 
 RUN apt-get update && apt install curl -y
 
@@ -31,8 +31,8 @@ ENV PATH=$PATH:/usr/local/go/bin
 ENV GOPATH /usr/local/go
 ENV GOMAXPROCS=2
 
-RUN chown golang:golang /usr/local/go -R
-RUN chown golang:golang /goopt -R
+RUN chown acvii:acvii /usr/local/go -R
+RUN chown acvii:acvii /goopt -R
 
 COPY ./go.mod ./
 COPY ./go.sum ./
@@ -44,6 +44,6 @@ RUN ["/bin/bash", "-c", "go install -mod=mod github.com/githubnemo/CompileDaemon
 COPY . .
 COPY --from=build /frontend/build /goopt/assets
 
-USER golang
+USER acvii
 
 ENTRYPOINT CompileDaemon -polling -log-prefix=false -build="go build -o main ./cmd" -command="./main" -directory="./"

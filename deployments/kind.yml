@@ -9,10 +9,10 @@ nodes:
     protocol: TCP
   extraMounts:
     - hostPath: ./cmd
-      containerPath: /goopt/cmd
+      containerPath: /acvii/cmd
     - hostPath: ./pkg
-      containerPath: /goopt/pkg
+      containerPath: /acvii/pkg
     - hostPath: ./internal
-      containerPath: /goopt/internal
+      containerPath: /acvii/internal
     - hostPath: ./test
-      containerPath: /goopt/test
+      containerPath: /acvii/test
