@@ -9,6 +9,7 @@ import (
 
 var handlers = gin.HandlersChain{}
 
+// Get assembles and returns handlers
 func Get(router *gin.Engine) http.Handler {
 	handlers = append(handlers, testHandlerFunc1)
 	handlers = append(handlers, testHandlerFunc2)
@@ -18,10 +19,12 @@ func Get(router *gin.Engine) http.Handler {
 	return router.Handler()
 }
 
+// TEST
 func testHandlerFunc1(c *gin.Context) {
 	fmt.Println("HandlerFunc1")
 }
 
+// TEST
 func testHandlerFunc2(c *gin.Context) {
 	fmt.Println("HandlerFunc2")
 }

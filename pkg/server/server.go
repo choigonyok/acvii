@@ -14,6 +14,10 @@ import (
 	"github.com/gin-gonic/gin"
 )
 
+const (
+	clientPort = "8080"
+)
+
 type Server struct {
 	httpServer *http.Server
 	idk        bool
@@ -21,28 +25,25 @@ type Server struct {
 
 var DefaultHandler *http.Handler
 
-func New() *Server {
-	srv := newHTTPServer()
+// New creates new server
+func New(m *middleware.Middleware) *Server {
+	srv := newHTTPServer(m)
 	return &Server{
 		httpServer: srv,
 		idk:        true,
 	}
 }
 
-func newHTTPServer() *http.Server {
+// newHTTPServer create new http server with given middlewares
+func newHTTPServer(m *middleware.Middleware) *http.Server {
 	router := gin.Default()
 
-	middlewares := middleware.New()
-	middlewares.AllowOrigin("*")
-	middlewares.AllowMethod("GET", "POST", "DELETE", "PUT")
-	middlewares.AllowHeader("Origin", "X-Requested-With", "Content-Type", "Accept")
-	middlewares.AllowCredential()
-	router.Use(middlewares.Get()...)
+	router.Use(m.Get()...)
 
 	handlers := handler.Get(router)
 
 	srv := &http.Server{
-		Addr:         ":8080",
+		Addr:         ":" + clientPort,
 		Handler:      handlers,
 		ReadTimeout:  5 * time.Second,
 		WriteTimeout: 5 * time.Second,
@@ -51,6 +52,7 @@ func newHTTPServer() *http.Server {
 	return srv
 }
 
+// Start starts server with gracefully close
 func (s *Server) Start() {
 	go func() {
 		s.httpServer.ListenAndServe()
@@ -74,6 +76,7 @@ func (s *Server) Start() {
 
 }
 
+// Stop stops running server
 func (s *Server) Stop() {
 	s.httpServer.Close()
 }
