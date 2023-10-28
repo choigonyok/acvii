@@ -3,7 +3,7 @@ package config
 import (
 	"path/filepath"
 
-	"github.com/choigonyok/goopt/pkg/env"
+	"github.com/choigonyok/acvii/pkg/env"
 	"github.com/spf13/viper"
 )
 

@@ -9,8 +9,8 @@ import (
 	"syscall"
 	"time"
 
-	"github.com/choigonyok/goopt/pkg/handler"
-	"github.com/choigonyok/goopt/pkg/middleware"
+	"github.com/choigonyok/acvii/pkg/handler"
+	"github.com/choigonyok/acvii/pkg/middleware"
 	"github.com/gin-gonic/gin"
 )
 

@@ -3,36 +3,46 @@ package main
 import (
 	"fmt"
 
-	"github.com/choigonyok/goopt/pkg/manifest"
-	"github.com/choigonyok/goopt/pkg/middleware"
-	"github.com/choigonyok/goopt/pkg/parser"
-	"github.com/choigonyok/goopt/pkg/server"
-	"github.com/choigonyok/goopt/pkg/watcher"
+	"github.com/choigonyok/acvii/pkg/manifest"
+	"github.com/choigonyok/acvii/pkg/middleware"
+	"github.com/choigonyok/acvii/pkg/parser"
+	"github.com/choigonyok/acvii/pkg/server"
+	"github.com/choigonyok/acvii/pkg/watcher"
+)
+
+const (
+	authrizationPolicyManifestExtension = "yml"
+	authrizationPolicyManifestName      = "test-ap"
+	authrizationPolicyManifestPath      = "../../../.acvctl"
 )
 
 func main() {
-	m := manifest.Manifest{Extension: "yml", Name: "test-ap", Path: "../../../.acvctl"}
-	w, _ := watcher.New()
-	w.WatchFile(m)
-	defer w.Close()
+	mamifest := manifest.Manifest{
+		Extension: authrizationPolicyManifestExtension,
+		Name:      authrizationPolicyManifestName,
+		Path:      authrizationPolicyManifestPath,
+	}
+	watcher, _ := watcher.New()
+	watcher.WatchFile(mamifest)
+	defer watcher.Close()
 
-	p := parser.New(w)
+	parser := parser.New(watcher)
 	go func() {
 		for {
-			event := <-w.GetEventChannel()
+			event := <-watcher.GetEventChannel()
 			if event.Op.String() == "WRITE" {
-				p.Parse(event)
-				fmt.Println(p.GetManifestFromPool(0))
+				parser.Parse(event)
+				fmt.Println(parser.GetManifestFromPool(0))
 			}
 		}
 	}()
 
-	middlewares := middleware.New()
-	middlewares.AllowOrigin("*")
-	middlewares.AllowMethod("GET", "POST", "DELETE", "PUT")
-	middlewares.AllowHeader("Origin", "X-Requested-With", "Content-Type", "Accept")
-	middlewares.AllowCredential()
+	middleware := middleware.New()
+	middleware.AllowOrigin("*")
+	middleware.AllowMethod("GET", "POST", "DELETE", "PUT")
+	middleware.AllowHeader("Origin", "X-Requested-With", "Content-Type", "Accept")
+	middleware.AllowCredential()
 
-	s := server.New(middlewares)
+	s := server.New(middleware)
 	s.Start()
 }

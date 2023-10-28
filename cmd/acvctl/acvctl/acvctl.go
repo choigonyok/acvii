@@ -4,7 +4,7 @@ import (
 	"fmt"
 	"os"
 
-	cmd "github.com/choigonyok/goopt/cmd/acvctl"
+	cmd "github.com/choigonyok/acvii/cmd/acvctl"
 )
 
 func main() {

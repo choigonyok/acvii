@@ -3,7 +3,7 @@ package config
 import (
 	"testing"
 
-	"github.com/choigonyok/goopt/pkg/env"
+	"github.com/choigonyok/acvii/pkg/env"
 )
 
 func TestInit(t *testing.T) {

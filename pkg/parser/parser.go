@@ -4,7 +4,7 @@ import (
 	"os"
 	"strings"
 
-	"github.com/choigonyok/goopt/pkg/watcher"
+	"github.com/choigonyok/acvii/pkg/watcher"
 	"github.com/fsnotify/fsnotify"
 )
 

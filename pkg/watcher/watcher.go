@@ -1,7 +1,7 @@
 package watcher
 
 import (
-	"github.com/choigonyok/goopt/pkg/manifest"
+	"github.com/choigonyok/acvii/pkg/manifest"
 	"github.com/fsnotify/fsnotify"
 )
 

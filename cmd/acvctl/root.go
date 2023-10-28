@@ -8,7 +8,7 @@ import (
 	"path/filepath"
 	"strings"
 
-	"github.com/choigonyok/goopt/pkg/env"
+	"github.com/choigonyok/acvii/pkg/env"
 	"github.com/spf13/cobra"
 	"github.com/spf13/viper"
 )
